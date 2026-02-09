@@ -1,0 +1,26 @@
+name: 'test-build'
+
+on:
+  pull_request:
+    branches: [main]
+
+# This workflow will trigger on v* tagged pushes on any branch (though there should never be v* tagged pushes on anything other than main) 
+# to create or update a GitHub release, build the app, and upload the artifacts to the release. This file is basically copied from the tauri-action repository.
+
+jobs:
+  publish-tauri:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: 'ubuntu-22.04'
+            args: ''
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-tauri
+
+      - uses: tauri-apps/tauri-action@v0.6.1
